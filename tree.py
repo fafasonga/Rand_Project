@@ -170,7 +170,7 @@ def run_decision_tree():
     """Function that runs the decision tree algorithm"""
     data = []
 
-    with open("assignment-data.tsv") as tsv:
+    with open("dataset.tsv") as tsv:
         for line in csv.reader(tsv, delimiter="\t"):
 
             if line[0] > '37':
@@ -237,7 +237,7 @@ def run_decision_tree():
         # Writing results to a file (D)
         f = open("result.txt", "w")
         f.write("accuracy: %.5f" % avg_acc)
-        f.write("Percentage accuracy: %.5f" % avg_acc)
+        f.write("\nPercentage accuracy: %.5f" % avg_acc*100)
         f.close()
 
 
