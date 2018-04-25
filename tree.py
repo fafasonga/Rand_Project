@@ -237,7 +237,7 @@ def run_decision_tree():
         # Writing results to a file (D)
         f = open("result.txt", "w")
         f.write("accuracy: %.5f" % avg_acc)
-        f.write("\nPercentage accuracy: %.5f" % avg_acc*100)
+        f.write("\nPercentage accuracy: %.5f" % (avg_acc*100))
         f.close()
 
 
