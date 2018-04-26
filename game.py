@@ -156,7 +156,7 @@ if __name__ == "__main__":
         print('\n')
 
         if board.complete():
-            # print("Game Over!")
+            print("Game Over!")
             break
         player = get_enemy(player)
         computer_move = determine(board, player)
