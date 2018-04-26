@@ -3,6 +3,7 @@ import math
 import random
 import matplotlib.pyplot as plt
 
+
 # Class used for learning and building the Decision Tree using the given Training Set
 class DecisionTree:
     tree = {}
@@ -22,37 +23,37 @@ class Node:
             self.children = dictionary.keys()
 
 
-# Majority Function which tells which class has more entries in given data-set
-def majorClass(attributes, data, target):
+# This Function which tells which class has more entries in given dataset
+def rootclass(attributes, data, target):
 
     freq = {}
     index = attributes.index(target)
 
-    for tuple in data:
-        if freq.has_key(tuple[index]):
-            freq[tuple[index]] += 1 
+    for row_data in data:
+        if freq.has_key(row_data[index]):
+            freq[row_data[index]] += 1
         else:
-            freq[tuple[index]] = 1
+            freq[row_data[index]] = 1
 
-    max = 0
+    max_val = 0
     major = ""
 
     for key in freq.keys():
-        if freq[key] > max:
-            max = freq[key]
+        if freq[key] > max_val:
+            max_val = freq[key]
             major = key
 
     return major
 
 
 # Calculates the entropy of the data given the target attribute
-def entropy(attributes, data, targetAttr):
+def entropy(attributes, data, targetattr):
     freq = {}
     entropy = 0.0
 
     i = 0
     for entry in attributes:
-        if targetAttr == entry:
+        if targetattr == entry:
             break
         i = i + 1
 
@@ -70,7 +71,7 @@ def entropy(attributes, data, targetAttr):
     return entropy
 
 
-def info_gain(attributes, data, attr, targetAttr):
+def info_gain(attributes, data, attr, targetattr):
     """Compute the information gain"""
     freq = {}
     data_entropy = 0.0
@@ -83,22 +84,22 @@ def info_gain(attributes, data, attr, targetAttr):
             freq[entry[i]] = 1.0
 
     for val in freq.keys():
-        valProb = freq[val] / sum(freq.values())
-        dataSubset = [entry for entry in data if entry[i] == val]
-        data_entropy += valProb * entropy(attributes, dataSubset, targetAttr)
+        val_prob = freq[val] / sum(freq.values())
+        subset_data = [entry for entry in data if entry[i] == val]
+        data_entropy += val_prob * entropy(attributes, subset_data, targetattr)
 
-    return entropy(attributes, data, targetAttr) - data_entropy
+    return entropy(attributes, data, targetattr) - data_entropy
 
 
 def attr_choose(data, attributes, target):
     """Choosing Attribute with Maximum Gain"""
     best = attributes[0]
-    maxGain = 0
+    max_gain = 0
 
     for attr in attributes:
-        newGain = info_gain(attributes, data, attr, target) 
-        if newGain > maxGain:
-            maxGain = newGain
+        new_gain = info_gain(attributes, data, attr, target)
+        if new_gain > max_gain:
+            max_gain = new_gain
             best = attr
 
     return best
@@ -124,23 +125,22 @@ def get_data(data, attributes, best, val):
     for entry in data:
         # find entries with the give value
         if entry[index] == val:
-            newEntry = []
+            new_entry = []
             # add value if it is not in best column
             for i in range(0, len(entry)):
                 if i != index:
-                    newEntry.append(entry[i])
-            new_data.append(newEntry)
+                    new_entry.append(entry[i])
+            new_data.append(new_entry)
     new_data.remove([])
 
     return new_data
-
 
 
 def build_tree(data, attributes, target):
     """This function is used to build the decision tree"""
     data = data[:]
     vals = [record[attributes.index(target)] for record in data]
-    default = majorClass(attributes, data, target)
+    default = rootclass(attributes, data, target)
 
     if not data or (len(attributes) - 1) <= 0:
         return default
@@ -154,9 +154,9 @@ def build_tree(data, attributes, target):
     
         for val in get_values(data, attributes, best):
             new_data = get_data(data, attributes, best, val)
-            newAttr = attributes[:]
-            newAttr.remove(best)
-            subtree = build_tree(new_data, newAttr, target)
+            new_attr = attributes[:]
+            new_attr.remove(best)
+            subtree = build_tree(new_data, new_attr, target)
 
             # Add the new subtree to the empty dictionary object in our new
             # tree/node we just created.
@@ -202,19 +202,19 @@ def run_decision_tree():
             results = []
 
             for entry in test_set:
-                tempDict = tree.tree.copy()
+                temp_dict = tree.tree.copy()
                 result = ""
 
-                while isinstance(tempDict, dict):
-                    root = Node(tempDict.keys()[0], tempDict[tempDict.keys()[0]])
-                    tempDict = tempDict[tempDict.keys()[0]]
+                while isinstance(temp_dict, dict):
+                    root = Node(temp_dict.keys()[0], temp_dict[temp_dict.keys()[0]])
+                    temp_dict = temp_dict[temp_dict.keys()[0]]
                     index = attributes.index(root.value)
                     value = entry[index]
 
-                    if value in tempDict.keys():
-                        child = Node(value, tempDict[value])
-                        result = tempDict[value]
-                        tempDict = tempDict[value]
+                    if value in temp_dict.keys():
+                        child = Node(value, temp_dict[value])
+                        result = temp_dict[value]
+                        temp_dict = temp_dict[value]
                     else:
                         result = "Null"
                         break
